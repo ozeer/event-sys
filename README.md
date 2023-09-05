@@ -24,7 +24,9 @@ show master status;
 
 # 安装canal
 1、下载canal（https://github.com/alibaba/canal/releases）：
-
+```
+canal.deployer-1.1.7-SNAPSHOT.tar.gz
+```
 
 2、修改instance实例配置文件conf/example/instance.properties：
 ```
@@ -87,8 +89,6 @@ Error: A fatal exception has occurred. Program will exit.
 brew uninstall openjdk@17
 brew install openjdk@8
 ```
-
-2、
 
 
 # 参考文章
