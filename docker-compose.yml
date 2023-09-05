@@ -1,0 +1,53 @@
+version: '3.0'
+# 网络配置
+networks:
+  backend:
+    driver: ${NETWORKS_DRIVER}
+# 服务容器配置
+services:
+  mysql:
+    image: mysql:latest
+    environment:
+      - TZ=${TZ}
+      - MYSQL_USER=${MYSQL_USERNAME}                  # 设置 Mysql 用户名称
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}              # 设置 Mysql 用户密码
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}    # 设置 Mysql root 用户密码
+    volumes:
+      - ${DATA_PATH_HOST}/mysql:/var/lib/mysql        # 引用 .env 配置中 DATA_PATH_HOST 变量，将宿主机上存放 Mysql 数据的目录挂载到容器中 /var/lib/mysql 目录
+    ports:
+      - "${MYSQL_PORT}:3306"                          # 设置容器3306端口映射指定宿主机端口
+    networks:
+      - backend
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  redis:
+    image: redis:latest
+    command: redis-server /etc/redis/redis.conf --appendonly yes --requirepass "${REDIS_PASSWORD}"
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - ${DATA_PATH_HOST}/redis:/data                # 引用 .env 配置中 DATA_PATH_HOST 变量，将宿主机上存放 Redis 数据的目录挂载到容器中 /data 目录
+      - ${DATA_PATH_HOST}/redis/redis.conf:/etc/redis/redis.conf
+    ports:
+      - "${REDIS_PORT}:6379"                         # 设置容器6379端口映射指定宿主机端口
+    networks:
+      - backend
+    restart: always
+  rabbitmq:
+    image: rabbitmq:management
+    restart: always
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_VHOST=${RABBITMQ_DEFAULT_VHOST}
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+      - TZ=${TZ}
+    volumes:
+      - ${DATA_PATH_HOST}/rabbitmq/lib:/var/lib/rabbitmq
+      - ${DATA_PATH_HOST}/rabbitmq/log:/var/log/rabbitmq
