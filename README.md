@@ -94,4 +94,5 @@ brew install openjdk@8
 # 参考文章
 - https://juejin.cn/post/6969089160858566693
 - https://developer.aliyun.com/article/770496
+- https://mynamelancelot.github.io/tool/canal.html
   
