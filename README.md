@@ -95,4 +95,5 @@ brew install openjdk@8
 - https://juejin.cn/post/6969089160858566693
 - https://developer.aliyun.com/article/770496
 - https://mynamelancelot.github.io/tool/canal.html
+- https://github.com/ThreeDotsLabs/watermill（基于GO的事件驱动库）
   
